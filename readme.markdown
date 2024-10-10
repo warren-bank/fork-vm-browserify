@@ -2,8 +2,6 @@
 
 emulate node's vm module for the browser
 
-[![Build Status](https://travis-ci.org/browserify/vm-browserify.svg?branch=master)](https://travis-ci.org/browserify/vm-browserify)
-
 # example
 
 Just write some client-side javascript:
