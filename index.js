@@ -53,13 +53,27 @@ function Context() {}
 Context.prototype = {};
 
 var Script = exports.Script = function NodeScript (code) {
+    var win, passthrough_policy;
     if (!(this instanceof Script)) return new Script(code);
     if(!iFrame) {
-      iFrame = document.createElement('iframe');
-      if (!iFrame.style) iFrame.style = {};
-      iFrame.style.display = 'none';
+        iFrame = document.createElement('iframe');
+        if (!iFrame.style) iFrame.style = {};
+        iFrame.style.display = 'none';
 
-      document.body.appendChild(iFrame);
+        document.body.appendChild(iFrame);
+
+        win = iFrame.contentWindow;
+        if (win && (typeof win.trustedTypes !== 'undefined')) {
+            try {
+                passthrough_policy = function(input, args) {return input;};
+                win.trustedTypes.createPolicy('default', {
+                    createHTML:      passthrough_policy,
+                    createScript:    passthrough_policy,
+                    createScriptURL: passthrough_policy
+                });
+            }
+            catch(e) {}
+        }
     }
     this.code = code;
     this.iFrame = iFrame;
